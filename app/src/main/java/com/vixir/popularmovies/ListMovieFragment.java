@@ -1,9 +1,11 @@
 package com.vixir.popularmovies;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import com.vixir.popularmovies.sharedpref.SettingsActivity;
 import com.vixir.popularmovies.utils.Util;
 
@@ -31,6 +35,10 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+import static com.facebook.stetho.inspector.network.ResponseHandlingInputStream.TAG;
 
 /**
  * Created by Vidhya on 09-10-2016.
@@ -39,28 +47,71 @@ public class ListMovieFragment extends Fragment {
     private ListMoviesGridAdapter mListMoviesGridAdapter;
     private ArrayList mMovieListData = new ArrayList();
     private GridView gridView;
+    private boolean mTwoPane = false;
+    private Parcelable state;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View v = inflater.inflate(R.layout.list_movies_fragment, container, false);
         gridView = (GridView) v.findViewById(R.id.movies_grid);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String orderByConnPref = sharedPref.getString(SettingsActivity.KEY_SORT_ORDER, "");
+        try {
+            ArrayList list = new FetchMovieListData().execute("http://api.themoviedb.org/3/movie/" + orderByConnPref + "?api_key=" + Util.MY_TMDB_API_KEY).get();
+            mListMoviesGridAdapter = new ListMoviesGridAdapter(getContext(), list);
+            gridView.setAdapter(mListMoviesGridAdapter);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
         return v;
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
     public void onStart() {
-               super.onStart();
+        super.onStart();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String orderByConnPref = sharedPref.getString(SettingsActivity.KEY_SORT_ORDER, "");
-        new FetchMovieListData().execute("http://api.themoviedb.org/3/movie/" + orderByConnPref + "?api_key="+ Util.MY_TMDB_API_KEY);
     }
 
+    OnPosterClicked mCallback;
+
+    public interface OnPosterClicked {
+        void onPosterSelected(MovieDetailParse position);
+    }
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnPosterClicked) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
+    @Override
+    public void onPause() {
+        state = gridView.onSaveInstanceState();
+        super.onPause();
+    }
 
     private class FetchMovieListData extends AsyncTask<String, Void, ArrayList> {
 
@@ -111,16 +162,15 @@ public class ListMovieFragment extends Fragment {
                 e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
-            }
-            finally {
-                if(urlConnection!=null){
+            } finally {
+                if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
-                if (reader!=null){
+                if (reader != null) {
                     try {
                         reader.close();
                     } catch (IOException e) {
-                        Log.e(this.getClass().getName(),"Error closing stream"+e);
+                        Log.e(this.getClass().getName(), "Error closing stream" + e);
                         e.printStackTrace();
                     }
                 }
@@ -130,12 +180,24 @@ public class ListMovieFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList arrayList) {
-            if(arrayList!=null){
-                mListMoviesGridAdapter = new ListMoviesGridAdapter(getContext(), arrayList);
-                gridView.setAdapter(mListMoviesGridAdapter);
-                mListMoviesGridAdapter.notifyDataSetChanged();
-            }
             super.onPostExecute(arrayList);
+            if (getArguments() != null && getArguments().getBoolean("twoPane") && getActivity() != null) {
+                Map<String, String> map = (Map<String, String>) arrayList.get(0);
+                String title = map.get("title");
+                String poster = map.get("poster");
+                String overView = map.get("synopsis");
+                String voteCount = map.get("voteCount");
+                String popularity = map.get("popularity");
+                String releaseDate = map.get("releaseDate").split("-")[0];
+                String movieId = map.get("movieId");
+                String rating = map.get("rating");
+                String language = map.get("language");
+                String backdrop = map.get("backdrop");
+                MovieDetailParse movieDetailParseObject = new MovieDetailParse(title, movieId, poster, overView, voteCount, popularity, releaseDate, rating, language, backdrop);
+                if (gridView.getSelectedItemId() == 0 || getArguments().getParcelable("calling") != null ){
+                    ((ListMovieFragment.OnPosterClicked) getActivity()).onPosterSelected(movieDetailParseObject);
+                }
+            }
         }
 
         private ArrayList getMovieDetailsFromJSON(String listMoviesJson) throws JSONException {
@@ -144,17 +206,18 @@ public class ListMovieFragment extends Fragment {
             ArrayList list = new ArrayList();
             for (int i = 0; i < listMoviesArray.length(); i++) {
                 JSONObject movieData = listMoviesArray.getJSONObject(i);
-                HashMap<String,String> map = new HashMap<String, String>();
-                map.put("title",movieData.getString("title"));
-                map.put("poster",movieData.getString("poster_path"));
-                map.put("synopsis",movieData.getString("overview"));
-                map.put("voteCount",movieData.getString("vote_count"));
-                map.put("popularity",movieData.getString("popularity"));
-                map.put("releaseDate",movieData.getString("release_date"));
-                map.put("movieId",movieData.getString("id"));
-                map.put("rating",movieData.getString("vote_average"));
-                map.put("language",movieData.getString("original_language"));
-                map.put("backdrop",movieData.getString("backdrop_path"));
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("title", movieData.getString("title"));
+                map.put("poster", movieData.getString("poster_path"));
+                map.put("synopsis", movieData.getString("overview"));
+                map.put("voteCount", movieData.getString("vote_count"));
+                map.put("popularity", movieData.getString("popularity"));
+                map.put("releaseDate", movieData.getString("release_date"));
+                map.put("movieId", movieData.getString("id"));
+                map.put("rating", movieData.getString("vote_average"));
+                map.put("language", movieData.getString("original_language"));
+                map.put("backdrop", movieData.getString("backdrop_path"));
+                map.put("twoPane", Boolean.toString(mTwoPane));
                 list.add(map);
             }
             return list;

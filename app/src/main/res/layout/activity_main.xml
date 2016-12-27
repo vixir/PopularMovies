@@ -11,6 +11,7 @@
         android:minHeight="?attr/actionBarSize"
         android:title=""
         android:background="@color/colorPrimary"
+        android:elevation="3dp"
         >
         <TextView
             android:layout_width="wrap_content"
