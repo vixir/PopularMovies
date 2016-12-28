@@ -42,7 +42,6 @@ public class ListMoviesGridAdapter extends BaseAdapter {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                imageView.setImageBitmap(bitmap);
                 palette = Palette.generate(bitmap);
                 swatch = palette.getDarkVibrantSwatch();
                 if (swatch != null) {
@@ -105,6 +104,8 @@ public class ListMoviesGridAdapter extends BaseAdapter {
             String rating = map.get("rating");
             String language = map.get("language");
             String backdrop = map.get("backdrop");
+
+            Picasso.with(context).load(Util.getImageUrl(map.get("poster"))).into(imageView);
             Picasso.with(context).load(Util.getImageUrl(map.get("poster"))).into(getTarget(imageView, textView));
             final MovieDetailParse movieDetailParseObject = new MovieDetailParse(title, movieId, poster, overView, voteCount, popularity, releaseDate, rating, language, backdrop);
 
