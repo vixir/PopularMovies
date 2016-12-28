@@ -180,4 +180,5 @@
     <string name="reviews">Reviews</string>
     <string name="show_more">show more</string>
     <string name="poster">poster</string>
+    <string name="noComments">No Reviews</string>
 </resources>

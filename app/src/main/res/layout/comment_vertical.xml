@@ -11,6 +11,8 @@
         android:orientation="vertical">
 
         <TextView
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:id="@+id/comment_person"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,18 +24,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="5"
-            android:paddingLeft="@dimen/sub_heading_left_padding" />
+            android:paddingLeft="@dimen/sub_heading_left_padding"
+            android:paddingRight="12dp" />
 
         <TextView
             android:id="@+id/show_more"
             android:layout_width="match_parent"
             android:layout_height="32dp"
+            android:layout_marginBottom="8dp"
             android:clickable="true"
             android:fontFamily="sans-serif-smallcaps"
             android:paddingLeft="@dimen/sub_heading_left_padding"
-            android:paddingTop="6dp"
-            android:visibility="invisible"
+            android:paddingTop="8dp"
             android:text="@string/show_more"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="invisible" />
     </LinearLayout>
+
+
 </LinearLayout>

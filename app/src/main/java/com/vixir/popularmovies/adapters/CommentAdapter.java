@@ -38,10 +38,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     private List commentDetailsList;
     private static final int MAX_LINES = 5;
     boolean showMore = true;
+    TextView noComments;
 
-    public CommentAdapter(Context context, String movieId) {
+    public CommentAdapter(Context context, String movieId, TextView noComments) {
         this.mContext = context;
         this.mMovieId = movieId;
+        this.noComments = noComments;
         Gson gson = new GsonBuilder().create();
         Retrofit retrofit = new Retrofit.Builder().baseUrl(TrailerAPI.ENDPOINT).addConverterFactory(GsonConverterFactory.create(gson)).build();
         CommentAPI githubUserAPI = retrofit.create(CommentAPI.class);
@@ -77,7 +79,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                     animation.setDuration(200).start();
                     holder.showMore.setText("show less");
                     showMore = false;
-                }else{
+                } else {
                     ObjectAnimator animation = ObjectAnimator.ofInt(holder.commentContent, "maxLines", CommentAdapter.MAX_LINES);
                     animation.setDuration(200).start();
                     holder.showMore.setText("show more");
@@ -100,11 +102,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             commentDetailsList = commentResponse.getResults();
             this.notifyDataSetChanged();
         }
+        if (commentDetailsList != null && commentDetailsList.size() == 0) {
+            noComments.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onFailure(Call<CommentResponse> call, Throwable t) {
-
+        noComments.setVisibility(View.VISIBLE);
     }
 
     public class CommentViewHolder extends RecyclerView.ViewHolder {
