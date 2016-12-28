@@ -254,7 +254,7 @@
                     android:layout_marginBottom="10dp"
                     android:text="@string/noComments"
                     android:visibility="invisible"
-                    ></TextView>
+                    > </TextView>
             </LinearLayout>
         </LinearLayout>
 
