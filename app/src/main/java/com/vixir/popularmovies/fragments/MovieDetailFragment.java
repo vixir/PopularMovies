@@ -90,7 +90,7 @@ public class MovieDetailFragment extends Fragment  implements View.OnClickListen
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             backdropImageView.setImageBitmap(bitmap);
             palette = Palette.generate(bitmap);
-            swatch = palette.getDarkVibrantSwatch();
+            swatch = palette.getVibrantSwatch();
             if (swatch != null) {
                 detailParent.setBackgroundColor(swatch.getRgb());
                 getActivity().getWindow().setStatusBarColor(swatch.getRgb());
@@ -149,7 +149,7 @@ public class MovieDetailFragment extends Fragment  implements View.OnClickListen
 
     public void updateUI(MovieDetailParse mMovieDetailParseObject) {
         Picasso.with(getActivity()).load(Util.getImageUrl(mMovieDetailParseObject.getPoster())).into(poster_imageview);
-        Picasso.with(getActivity()).load(Util.getImageUrl(mMovieDetailParseObject.getBackdrop())).into(target);
+        Picasso.with(getActivity()).load(Util.getImageUrlForBackDrop(mMovieDetailParseObject.getBackdrop())).into(target);
         toolbarTitle.setText(mMovieDetailParseObject.getTitle());
         synopsis_textview.setText(mMovieDetailParseObject.getOverView());
         rating_textview.setText(mMovieDetailParseObject.getRating());
