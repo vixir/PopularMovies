@@ -1,8 +1,7 @@
-package com.vixir.popularmovies;
+package com.vixir.popularmovies.fragments;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -15,8 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+import com.vixir.popularmovies.MovieDetailParse;
+import com.vixir.popularmovies.R;
+import com.vixir.popularmovies.adapters.ListMoviesGridAdapter;
 import com.vixir.popularmovies.sharedpref.SettingsActivity;
 import com.vixir.popularmovies.utils.Util;
 
@@ -38,11 +38,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import static com.facebook.stetho.inspector.network.ResponseHandlingInputStream.TAG;
-
-/**
- * Created by Vidhya on 09-10-2016.
- */
 public class ListMovieFragment extends Fragment {
     private ListMoviesGridAdapter mListMoviesGridAdapter;
     private ArrayList mMovieListData = new ArrayList();

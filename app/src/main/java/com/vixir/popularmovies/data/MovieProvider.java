@@ -7,10 +7,6 @@ import net.simonvt.schematic.annotation.ContentUri;
 import net.simonvt.schematic.annotation.InexactContentUri;
 import net.simonvt.schematic.annotation.TableEndpoint;
 
-/**
- * Created by DELL on 15-12-2016.
- */
-
 @ContentProvider(authority = MovieProvider.AUTHORITY, database = MovieDatabase.class)
 public class MovieProvider {
 

@@ -5,9 +5,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-/**
- * Created by DELL on 20-12-2016.
- */
 public class ExpandableTextView extends TextView implements View.OnClickListener
 {
     private static final int MAX_LINES = 5;

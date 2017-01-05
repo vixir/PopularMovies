@@ -1,6 +1,5 @@
 package com.vixir.popularmovies.fragments;
 
-import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.Intent;
 import android.content.OperationApplicationException;
@@ -9,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -18,13 +16,11 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,14 +29,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.vixir.popularmovies.BuildConfig;
 import com.vixir.popularmovies.MovieDetailActivity;
 import com.vixir.popularmovies.MovieDetailParse;
 import com.vixir.popularmovies.R;
-import com.vixir.popularmovies.TrailerAdapter;
+import com.vixir.popularmovies.adapters.TrailerAdapter;
 import com.vixir.popularmovies.adapters.CommentAdapter;
 import com.vixir.popularmovies.data.MovieColumns;
 import com.vixir.popularmovies.data.MovieProvider;
-import com.vixir.popularmovies.retro.Example;
+import com.vixir.popularmovies.retro.TrailerResponse;
 import com.vixir.popularmovies.retro.TrailerAPI;
 import com.vixir.popularmovies.utils.Util;
 
@@ -53,11 +50,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by DELL on 24-12-2016.
- */
-
-public class MovieDetailFragment extends Fragment  implements View.OnClickListener, Callback<Example> {
+public class MovieDetailFragment extends Fragment  implements View.OnClickListener, Callback<TrailerResponse> {
     private static final String FORECAST_SHARE_HASHTAG = "#Popular Movies";
     public static final String MOVIE_DETAIL_URI = "URI";
     private ImageView poster_imageview;
@@ -91,7 +84,7 @@ public class MovieDetailFragment extends Fragment  implements View.OnClickListen
             backdropImageView.setImageBitmap(bitmap);
             palette = Palette.generate(bitmap);
             swatch = palette.getVibrantSwatch();
-            if (swatch != null) {
+            if (swatch != null && getActivity()!=null) {
                 detailParent.setBackgroundColor(swatch.getRgb());
                 getActivity().getWindow().setStatusBarColor(swatch.getRgb());
             }
@@ -174,7 +167,7 @@ public class MovieDetailFragment extends Fragment  implements View.OnClickListen
         Gson gson = new GsonBuilder().create();
         Retrofit retrofit = new Retrofit.Builder().baseUrl(TrailerAPI.ENDPOINT).addConverterFactory(GsonConverterFactory.create(gson)).build();
         TrailerAPI githubUserAPI = retrofit.create(TrailerAPI.class);
-        Call<Example> callUser = githubUserAPI.getUser(mMovieDetailParseObject.getMovieId());
+        Call<TrailerResponse> callUser = githubUserAPI.getUser(mMovieDetailParseObject.getMovieId(),BuildConfig.TMDB_API_KEY );
         mShareMovieDetails = String.format(" Hey check it out!! \n %s movie - has %s rating and has %s votes", mMovieDetailParseObject.getTitle(), mMovieDetailParseObject.getRating(), mMovieDetailParseObject.getVoteCount());
         callUser.enqueue(this);
     }
@@ -194,18 +187,9 @@ public class MovieDetailFragment extends Fragment  implements View.OnClickListen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == android.R.id.home) {
-//            onBackPressed();
-        }
         return super.onOptionsItemSelected(item);
     }
-/*
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-*/
 
     @Override
     public void onClick(View v) {
@@ -259,12 +243,12 @@ public class MovieDetailFragment extends Fragment  implements View.OnClickListen
     }
 
     @Override
-    public void onResponse(Call<Example> call, Response<Example> response) {
+    public void onResponse(Call<TrailerResponse> call, Response<TrailerResponse> response) {
         if (null == response) {
             return;
         }
-        Example example = response.body();
-        List list = example.getResults();
+        TrailerResponse example = response.body();
+        List list = example.getTrailerResults();
         if(list.size()==0){
             trailerHeader.setVisibility(View.INVISIBLE);
         }
@@ -274,7 +258,7 @@ public class MovieDetailFragment extends Fragment  implements View.OnClickListen
     }
 
     @Override
-    public void onFailure(Call<Example> call, Throwable t) {
+    public void onFailure(Call<TrailerResponse> call, Throwable t) {
 
     }
 }

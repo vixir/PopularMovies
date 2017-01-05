@@ -6,18 +6,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.vixir.popularmovies.BuildConfig;
 import com.vixir.popularmovies.R;
-import com.vixir.popularmovies.TrailerAdapter;
 import com.vixir.popularmovies.retro.CommentAPI;
-import com.vixir.popularmovies.retro.Example;
 import com.vixir.popularmovies.retro.TrailerAPI;
-import com.vixir.popularmovies.type.CommentResponse;
-import com.vixir.popularmovies.type.CommentResult;
+import com.vixir.popularmovies.retro.CommentResponse;
+import com.vixir.popularmovies.retro.CommentResult;
 
 import java.util.List;
 
@@ -26,10 +24,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-/**
- * Created by DELL on 19-12-2016.
- */
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> implements Callback<CommentResponse> {
 
@@ -47,7 +41,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         Gson gson = new GsonBuilder().create();
         Retrofit retrofit = new Retrofit.Builder().baseUrl(TrailerAPI.ENDPOINT).addConverterFactory(GsonConverterFactory.create(gson)).build();
         CommentAPI githubUserAPI = retrofit.create(CommentAPI.class);
-        Call<CommentResponse> callUser = githubUserAPI.getUser(movieId);
+        Call<CommentResponse> callUser = githubUserAPI.getUser(movieId, BuildConfig.TMDB_API_KEY);
         callUser.enqueue(this);
     }
 

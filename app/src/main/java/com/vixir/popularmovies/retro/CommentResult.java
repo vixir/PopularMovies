@@ -1,8 +1,5 @@
-package com.vixir.popularmovies.type;
+package com.vixir.popularmovies.retro;
 
-/**
- * Created by DELL on 19-12-2016.
- */
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

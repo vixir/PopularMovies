@@ -6,9 +6,7 @@ import net.simonvt.schematic.annotation.DataType;
 import net.simonvt.schematic.annotation.Database;
 import net.simonvt.schematic.annotation.NotNull;
 import net.simonvt.schematic.annotation.PrimaryKey;
-/**
- * Created by DELL on 15-12-2016.
- */
+
 public interface MovieColumns {
     @DataType(DataType.Type.INTEGER) @PrimaryKey
     @AutoIncrement

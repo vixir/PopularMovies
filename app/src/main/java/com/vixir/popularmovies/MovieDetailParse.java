@@ -3,9 +3,6 @@ package com.vixir.popularmovies;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Vidhya on 10-10-2016.
- */
 public class MovieDetailParse implements Parcelable {
     public String getTitle() {
         return title;

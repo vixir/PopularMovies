@@ -9,10 +9,6 @@ import android.transition.TransitionInflater;
 
 import com.vixir.popularmovies.fragments.MovieDetailFragment;
 
-
-/**
- * Created by Vivek on 10-10-2016.
- */
 public class MovieDetailActivity extends AppCompatActivity {
 
     @Override

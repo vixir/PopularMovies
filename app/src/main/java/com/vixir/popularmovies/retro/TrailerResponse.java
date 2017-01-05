@@ -5,14 +5,14 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Example {
+public class TrailerResponse {
 
     @SerializedName("id")
     @Expose
     private Integer id;
     @SerializedName("results")
     @Expose
-    private List<Result> results = null;
+    private List<TrailerResult> trailerResults = null;
 
     public Integer getId() {
         return id;
@@ -22,12 +22,12 @@ public class Example {
         this.id = id;
     }
 
-    public List<Result> getResults() {
-        return results;
+    public List<TrailerResult> getTrailerResults() {
+        return trailerResults;
     }
 
-    public void setResults(List<Result> results) {
-        this.results = results;
+    public void setTrailerResults(List<TrailerResult> trailerResults) {
+        this.trailerResults = trailerResults;
     }
 
 }

@@ -1,27 +1,22 @@
-package com.vixir.popularmovies;
+package com.vixir.popularmovies.fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import com.vixir.popularmovies.R;
+import com.vixir.popularmovies.adapters.ListMoviesGridAdapter;
 import com.vixir.popularmovies.data.MovieColumns;
 import com.vixir.popularmovies.data.MovieProvider;
 import com.vixir.popularmovies.data.MovieDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-/**
- * Created by DELL on 16-12-2016.
- */
 
 public class FavouriteMovieFragment extends Fragment {
 
@@ -82,7 +77,6 @@ public class FavouriteMovieFragment extends Fragment {
         Cursor c = getActivity().getContentResolver().query(MovieProvider.buildUri("movies"), null, null, null, null);
         int rowCount = c.getCount();
         c.moveToFirst();
-        int col = c.getColumnCount();
         for(int j=0;j<rowCount;j++)
         {
             HashMap<String,String> map = new HashMap<String, String>();

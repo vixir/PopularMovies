@@ -1,4 +1,4 @@
-package com.vixir.popularmovies;
+package com.vixir.popularmovies.adapters;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -10,20 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
-import com.vixir.popularmovies.retro.Result;
+import com.vixir.popularmovies.R;
+import com.vixir.popularmovies.retro.TrailerResult;
 import java.util.List;
 
-/**
- * Created by Vivek on 17-12-2016.
- */
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHolder> {
 
 
-    private List<Result> trailerList;
+    private List<TrailerResult> trailerList;
     private static Context context;
 
-    public TrailerAdapter(Context context, List<Result> trailerList){
+    public TrailerAdapter(Context context, List<TrailerResult> trailerList){
         this.trailerList = trailerList;
         this.context = context;
     }
@@ -38,7 +36,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Result trailer = trailerList.get(position);
+        TrailerResult trailer = trailerList.get(position);
         Picasso.with(context).load("http://img.youtube.com/vi/"+trailer.getKey()+"/mqdefault.jpg").into(holder.trailerThumbnail);
     }
 

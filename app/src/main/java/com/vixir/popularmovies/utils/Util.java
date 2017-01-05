@@ -2,9 +2,6 @@ package com.vixir.popularmovies.utils;
 
 import com.vixir.popularmovies.BuildConfig;
 
-/**
- * Created by DELL on 18-12-2016.
- */
 
 public class Util {
     private static String IMAGE_URL = "http://image.tmdb.org/t/p/w185/";

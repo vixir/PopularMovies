@@ -1,13 +1,10 @@
 package com.vixir.popularmovies;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.facebook.stetho.Stetho;
+import com.vixir.popularmovies.fragments.FavouriteMovieFragment;
+import com.vixir.popularmovies.fragments.ListMovieFragment;
 import com.vixir.popularmovies.fragments.MovieDetailFragment;
 import com.vixir.popularmovies.sharedpref.SettingsActivity;
 
@@ -26,14 +25,17 @@ public class MainActivity extends AppCompatActivity implements ListMovieFragment
     private static final String MOVIEDETAIL_TAG = "MDTAG";
     private static final String LISTMOVIE_TAG = "LMTAG";
     private static final String FAVOURITEMOVIE_TAG = "FMTAG";
+    private MovieDetailParse mMovieDetailParseObject;
     private boolean mTwoPane;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
+        if(toolbar!=null){
+            toolbar.setTitle("");
+            setSupportActionBar(toolbar);
+        }
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
                         .enableDumpapp(
@@ -103,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements ListMovieFragment
 
     @Override
     public void onPosterSelected(MovieDetailParse movieDetailParseObject) {
+        mMovieDetailParseObject = movieDetailParseObject;
         if(mTwoPane == false){
             Intent intent = new Intent(this, MovieDetailActivity.class);
             ActivityOptionsCompat options = ActivityOptionsCompat.
@@ -119,4 +122,5 @@ public class MainActivity extends AppCompatActivity implements ListMovieFragment
                                         .commit();
         }
     }
+
 }
