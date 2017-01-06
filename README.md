@@ -1,8 +1,22 @@
 # PopularMovies
+
 App for displaying most popular and top rated movies
 
-![Alt text](https://github.com/vixir/PopularMovies/blob/master/images/moana_1.png?raw=true "Detail Screen 1")
+# Instruction to run this project
 
-![Alt text](https://github.com/vixir/PopularMovies/blob/master/images/moana_2.png?raw=true "Detail Screen 2")
+Replace MyTheMovieDatabaseMobileKey value in gradle.properties with your own TMDB API key.
 
-![Alt text](https://github.com/vixir/PopularMovies/blob/master/images/moana_3.png?raw=true "Tablet Mode")
+MyTheMovieDatabaseMobileKey = "YOUR_OWN_API_KEY"
+
+
+<img src="https://raw.githubusercontent.com/vixir/PopularMovies/master/images/moana.png" alt="moana.png" style="width: 380px;"/>
+
+
+<img src="https://raw.githubusercontent.com/vixir/PopularMovies/master/images/moana_1.png" style="width: 380px;"/>
+
+
+<img src="https://raw.githubusercontent.com/vixir/PopularMovies/master/images/moana_2.png" style="width: 380px;"/>
+
+
+<img src="https://raw.githubusercontent.com/vixir/PopularMovies/master/images/moana_3.png" style="width: 800px;"/>
+
