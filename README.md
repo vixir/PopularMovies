@@ -7,7 +7,7 @@ Replace MyTheMovieDatabaseMobileKey value in gradle.properties with your own TMD
 MyTheMovieDatabaseMobileKey = "YOUR_OWN_API_KEY"
 
 
-![Alt text](https://github.com/vixir/PopularMovies/blob/master/images/moana_1.png?raw=true "Detail Screen 1")
+![Alt text](https://github.com/vixir/PopularMovies/blob/master/images/moana_1.png?raw=true "Detail Screen 1" | width = 48)
 
 ![Alt text](https://github.com/vixir/PopularMovies/blob/master/images/moana_2.png?raw=true "Detail Screen 2")
 
