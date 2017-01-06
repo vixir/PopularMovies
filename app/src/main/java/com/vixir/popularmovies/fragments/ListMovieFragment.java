@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.vixir.popularmovies.MovieDetailParse;
 import com.vixir.popularmovies.R;
@@ -53,6 +54,10 @@ public class ListMovieFragment extends Fragment {
         gridView = (GridView) v.findViewById(R.id.movies_grid);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String orderByConnPref = sharedPref.getString(SettingsActivity.KEY_SORT_ORDER, "");
+        if("".equals(Util.MY_TMDB_API_KEY)){
+            Toast.makeText(getContext(),"Please Enter TMDB API KEY",Toast.LENGTH_LONG).show();
+            return v;
+        }
         try {
             ArrayList list = new FetchMovieListData().execute("http://api.themoviedb.org/3/movie/" + orderByConnPref + "?api_key=" + Util.MY_TMDB_API_KEY).get();
             mListMoviesGridAdapter = new ListMoviesGridAdapter(getContext(), list);
