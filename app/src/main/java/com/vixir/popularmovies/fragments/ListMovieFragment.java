@@ -53,7 +53,7 @@ public class ListMovieFragment extends Fragment {
         View v = inflater.inflate(R.layout.list_movies_fragment, container, false);
         gridView = (GridView) v.findViewById(R.id.movies_grid);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String orderByConnPref = sharedPref.getString(SettingsActivity.KEY_SORT_ORDER, "");
+        String orderByConnPref = sharedPref.getString(SettingsActivity.KEY_SORT_ORDER, "popular");
         if("".equals(Util.MY_TMDB_API_KEY)){
             Toast.makeText(getContext(),"Please Enter TMDB API KEY",Toast.LENGTH_LONG).show();
             return v;
