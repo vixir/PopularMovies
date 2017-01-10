@@ -9,14 +9,6 @@ Replace MyTheMovieDatabaseMobileKey value in gradle.properties with your own TMD
 MyTheMovieDatabaseMobileKey = "YOUR_OWN_API_KEY"
 
 
-<img src="https://raw.githubusercontent.com/vixir/PopularMovies/master/images/moana.png" alt="moana.png" style="width: 380px;"/>
+<img src="https://raw.githubusercontent.com/vixir/PopularMovies/master/images/moana.png" width="280"/><img src="https://raw.githubusercontent.com/vixir/PopularMovies/master/images/moana_1.png" width="280"/><img src="https://raw.githubusercontent.com/vixir/PopularMovies/master/images/moana_2.png" width="280"/>
 
-
-<img src="https://raw.githubusercontent.com/vixir/PopularMovies/master/images/moana_1.png" style="width: 380px;"/>
-
-
-<img src="https://raw.githubusercontent.com/vixir/PopularMovies/master/images/moana_2.png" style="width: 380px;"/>
-
-
-<img src="https://raw.githubusercontent.com/vixir/PopularMovies/master/images/moana_3.png" style="width: 800px;"/>
-
+  <img src="https://raw.githubusercontent.com/vixir/PopularMovies/master/images/moana_3.png" width="560"/>
