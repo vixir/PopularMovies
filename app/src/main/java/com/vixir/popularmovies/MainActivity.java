@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements ListMovieFragment
         } else {
             Bundle args = new Bundle();
             args.putBoolean("twoPane", mTwoPane);
-                args.putParcelable("calling", getCallingActivity());
+            args.putParcelable("calling", getCallingActivity());
             ListMovieFragment listMovieFragment = (ListMovieFragment) this.getSupportFragmentManager().findFragmentByTag(LISTMOVIE_TAG);
             if(listMovieFragment==null){
                 listMovieFragment  = new ListMovieFragment();

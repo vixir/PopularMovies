@@ -65,11 +65,14 @@ public class ListMovieFragment extends Fragment {
             gridView.setAdapter(mListMoviesGridAdapter);
             if (savedInstanceState != null) {
                 pos = savedInstanceState.getInt("position");
+                mTwoPane = savedInstanceState.getBoolean("twoPane");
             }
             mListMoviesGridAdapter.setmOnItemSelected(new ListMoviesGridAdapter.OnItemSelected() {
                 @Override
                 public void onClick(MovieDetailParse movieDetailParse, int position) {
-                    pos = position;
+                    if (mTwoPane == true) {
+                        pos = position;
+                    }
                     ((ListMovieFragment.OnPosterClicked) getActivity()).onPosterSelected(movieDetailParse);
                 }
             });
@@ -132,6 +135,7 @@ public class ListMovieFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        pos = gridView.getFirstVisiblePosition();
         outState.putInt("position", pos);
     }
 
