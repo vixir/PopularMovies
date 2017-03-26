@@ -9,7 +9,8 @@ import java.lang.String;
 
 public class MovieDatabase extends SQLiteOpenHelper {
   private static final int DATABASE_VERSION = 1;
-
+  public static final String DATABASE_NAME = "movieDatabase.db";
+  public static final String TABLE_MOVIES = "movies";
   public static final String MOVIES = "CREATE TABLE movies ("
    + MovieColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
    + MovieColumns.MOVIE_ID + " TEXT NOT NULL,"
@@ -27,7 +28,7 @@ public class MovieDatabase extends SQLiteOpenHelper {
   private Context context;
 
   private MovieDatabase(Context context) {
-    super(context, "movieDatabase.db", null, DATABASE_VERSION);
+    super(context, DATABASE_NAME, null, DATABASE_VERSION);
     this.context = context;
   }
 
@@ -49,6 +50,7 @@ public class MovieDatabase extends SQLiteOpenHelper {
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+    db.execSQL("DROP TABLE IF EXISTS "+ MOVIES);
+    onCreate(db);
   }
 }

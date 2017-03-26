@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,7 +37,7 @@ import com.vixir.popularmovies.R;
 import com.vixir.popularmovies.adapters.TrailerAdapter;
 import com.vixir.popularmovies.adapters.CommentAdapter;
 import com.vixir.popularmovies.data.MovieColumns;
-import com.vixir.popularmovies.data.MovieProvider;
+import com.vixir.popularmovies.data.gen.MovieProvider;
 import com.vixir.popularmovies.retro.TrailerResponse;
 import com.vixir.popularmovies.retro.TrailerAPI;
 import com.vixir.popularmovies.utils.Util;
@@ -148,7 +149,7 @@ public class MovieDetailFragment extends Fragment  implements View.OnClickListen
         rating_textview.setText(mMovieDetailParseObject.getRating());
         language_textview.setText(mMovieDetailParseObject.getLanguage());
         popularity_textview.setText(getPopularity(mMovieDetailParseObject.getPopularity()));
-        Cursor c = getActivity().getContentResolver().query(MovieProvider.Movies.CONTENT_URI, null, MovieColumns.MOVIE_ID + "= ?", new String[]{mMovieDetailParseObject.getMovieId()}, null);
+        Cursor c = getActivity().getContentResolver().query(MovieProvider.CONTENT_URI, null, MovieColumns.MOVIE_ID + "= ?", new String[]{mMovieDetailParseObject.getMovieId()}, null);
         if (c != null && c.getCount() > 0) {
             isAlreadyFav = true;
             fav_textview.setText("Favourites");
@@ -196,10 +197,11 @@ public class MovieDetailFragment extends Fragment  implements View.OnClickListen
         switch (v.getId()) {
             case R.id.favourite: {
                 if (isAlreadyFav) {
-                    int d = getActivity().getContentResolver().delete(MovieProvider.Movies.CONTENT_URI, MovieColumns.MOVIE_ID + "= ?", new String[]{mMovieDetailParseObject.getMovieId()});
+                    int d = getActivity().getContentResolver().delete(MovieProvider.CONTENT_URI, MovieColumns.MOVIE_ID + "= ?", new String[]{mMovieDetailParseObject.getMovieId()});
                     favIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_border_black_24dp));
                     isAlreadyFav = false;
-                } else {
+                    AppCompatActivity compatActivity = (AppCompatActivity) getActivity();
+                    } else {
                     favIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_black_24dp));
                     insertData();
                     isAlreadyFav = true;
@@ -224,7 +226,7 @@ public class MovieDetailFragment extends Fragment  implements View.OnClickListen
 
     private void insertData() {
         ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
-        ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(MovieProvider.Movies.CONTENT_URI);
+        ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(MovieProvider.CONTENT_URI);
         builder.withValue(MovieColumns.TITLE, mMovieDetailParseObject.getTitle());
         builder.withValue(MovieColumns.MOVIE_ID, mMovieDetailParseObject.getMovieId());
         builder.withValue(MovieColumns.SYNOPSIS, mMovieDetailParseObject.getOverView());

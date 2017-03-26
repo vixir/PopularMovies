@@ -13,8 +13,8 @@ import com.vixir.popularmovies.MovieDetailParse;
 import com.vixir.popularmovies.R;
 import com.vixir.popularmovies.adapters.ListMoviesGridAdapter;
 import com.vixir.popularmovies.data.MovieColumns;
-import com.vixir.popularmovies.data.MovieProvider;
-import com.vixir.popularmovies.data.MovieDatabase;
+import com.vixir.popularmovies.data.gen.MovieProvider;
+import com.vixir.popularmovies.data.gen.MovieDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,11 +66,15 @@ public class FavouriteMovieFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
         if (mMovieListData != null) {
             mListMoviesGridAdapter = new ListMoviesGridAdapter(getContext(), mMovieListData);
-
             if (savedInstanceState != null) {
                 pos = savedInstanceState.getInt("position");
                 mTwoPane = savedInstanceState.getBoolean("twoPane");
