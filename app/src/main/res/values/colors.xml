@@ -7,4 +7,6 @@
     <color name="colorRipple">#A9A9F5</color>
     <color name="white">#FFFFFFFF</color>
     <color name="color_grey">#afafaf</color>
+    <color name="transparent_pressed">#73FF0000</color>
+    <color name="transparent_selected">#66FF0000</color>
 </resources>

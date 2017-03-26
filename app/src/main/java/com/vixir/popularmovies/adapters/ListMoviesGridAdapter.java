@@ -29,6 +29,7 @@ public class ListMoviesGridAdapter extends BaseAdapter {
     ArrayList<Map<String, String>> movieListData = new ArrayList<>();
     private Palette palette;
     private static Palette.Swatch swatch;
+    public OnItemSelected mOnItemSelected;
 
     private Target getTarget(final ImageView imageView, final  TextView textView) {
         return new Target() {
@@ -62,6 +63,8 @@ public class ListMoviesGridAdapter extends BaseAdapter {
         this.movieListData = movieListData;
     }
 
+
+
     @Override
     public int getCount() {
         return movieListData.size();
@@ -75,6 +78,14 @@ public class ListMoviesGridAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    public interface OnItemSelected{
+        void onClick(MovieDetailParse movieDetailParse, int position);
+    }
+
+    public void setmOnItemSelected(OnItemSelected onItemSelected){
+        this.mOnItemSelected = onItemSelected;
     }
 
     @Override
@@ -103,7 +114,7 @@ public class ListMoviesGridAdapter extends BaseAdapter {
             moviesGridView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((ListMovieFragment.OnPosterClicked) context).onPosterSelected(movieDetailParseObject);
+                    mOnItemSelected.onClick(movieDetailParseObject,position);
                 }
             });
         }

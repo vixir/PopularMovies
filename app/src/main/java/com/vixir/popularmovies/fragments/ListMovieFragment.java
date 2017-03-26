@@ -45,6 +45,7 @@ public class ListMovieFragment extends Fragment {
     private GridView gridView;
     private boolean mTwoPane = false;
     private Parcelable state;
+    private int pos = 0;
 
     @Nullable
     @Override
@@ -54,14 +55,27 @@ public class ListMovieFragment extends Fragment {
         gridView = (GridView) v.findViewById(R.id.movies_grid);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String orderByConnPref = sharedPref.getString(SettingsActivity.KEY_SORT_ORDER, "popular");
-        if("".equals(Util.MY_TMDB_API_KEY)){
-            Toast.makeText(getContext(),"Please Enter TMDB API KEY",Toast.LENGTH_LONG).show();
+        if ("".equals(Util.MY_TMDB_API_KEY)) {
+            Toast.makeText(getContext(), "Please Enter TMDB API KEY", Toast.LENGTH_LONG).show();
             return v;
         }
         try {
             ArrayList list = new FetchMovieListData().execute("http://api.themoviedb.org/3/movie/" + orderByConnPref + "?api_key=" + Util.MY_TMDB_API_KEY).get();
             mListMoviesGridAdapter = new ListMoviesGridAdapter(getContext(), list);
             gridView.setAdapter(mListMoviesGridAdapter);
+            if (savedInstanceState != null) {
+                pos = savedInstanceState.getInt("position");
+            }
+            mListMoviesGridAdapter.setmOnItemSelected(new ListMoviesGridAdapter.OnItemSelected() {
+                @Override
+                public void onClick(MovieDetailParse movieDetailParse, int position) {
+                    pos = position;
+                    ((ListMovieFragment.OnPosterClicked) getActivity()).onPosterSelected(movieDetailParse);
+                }
+            });
+
+            gridView.smoothScrollToPosition(pos);
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -76,6 +90,7 @@ public class ListMovieFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
@@ -84,6 +99,7 @@ public class ListMovieFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     OnPosterClicked mCallback;
@@ -112,6 +128,19 @@ public class ListMovieFragment extends Fragment {
         state = gridView.onSaveInstanceState();
         super.onPause();
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("position", pos);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+    }
+
 
     private class FetchMovieListData extends AsyncTask<String, Void, ArrayList> {
 
@@ -194,7 +223,7 @@ public class ListMovieFragment extends Fragment {
                 String language = map.get("language");
                 String backdrop = map.get("backdrop");
                 MovieDetailParse movieDetailParseObject = new MovieDetailParse(title, movieId, poster, overView, voteCount, popularity, releaseDate, rating, language, backdrop);
-                if (gridView.getSelectedItemId() == 0 || getArguments().getParcelable("calling") != null ){
+                if (gridView.getSelectedItemId() == 0 || getArguments().getParcelable("calling") != null) {
                     ((ListMovieFragment.OnPosterClicked) getActivity()).onPosterSelected(movieDetailParseObject);
                 }
             }

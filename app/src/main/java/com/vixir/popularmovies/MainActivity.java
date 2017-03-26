@@ -51,11 +51,11 @@ public class MainActivity extends AppCompatActivity implements ListMovieFragment
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
-            if (savedInstanceState == null) {
+            /*if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.detail_placeholder, new MovieDetailFragment(), MOVIEDETAIL_TAG)
                         .commit();
-            }
+            }*/
         } else {
             mTwoPane = false;
         }
@@ -67,9 +67,12 @@ public class MainActivity extends AppCompatActivity implements ListMovieFragment
         } else {
             Bundle args = new Bundle();
             args.putBoolean("twoPane", mTwoPane);
-            args.putParcelable("calling", getCallingActivity());
-            ListMovieFragment listMovieFragment = new ListMovieFragment();
-            listMovieFragment.setArguments(args);
+                args.putParcelable("calling", getCallingActivity());
+            ListMovieFragment listMovieFragment = (ListMovieFragment) this.getSupportFragmentManager().findFragmentByTag(LISTMOVIE_TAG);
+            if(listMovieFragment==null){
+                listMovieFragment  = new ListMovieFragment();
+                listMovieFragment.setArguments(args);
+            }
             Transition changeTransform = TransitionInflater.from(this).
                     inflateTransition(R.transition.change_image_transform);
             Transition explodeTransform = TransitionInflater.from(this).
@@ -78,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements ListMovieFragment
             listMovieFragment.setExitTransition(explodeTransform);
             listMovieFragment.setSharedElementReturnTransition(changeTransform);
             fragmentTransaction.replace(R.id.fragment_placeholder, listMovieFragment, LISTMOVIE_TAG);
-            fragmentTransaction.commit();
+            fragmentTransaction.commitAllowingStateLoss();
         }
     }
 
@@ -113,14 +116,17 @@ public class MainActivity extends AppCompatActivity implements ListMovieFragment
             intent.putExtra("movieDetailParse",movieDetailParseObject);
             this.startActivity(intent, options.toBundle());
         }else{
-            MovieDetailFragment movieDetailFragment = new MovieDetailFragment();
-            Bundle args = new Bundle();
-            args.putParcelable("movieDetailParse",movieDetailParseObject);
-            movieDetailFragment.setArguments(args);
-            getSupportFragmentManager().beginTransaction()
-                                        .replace(R.id.detail_placeholder, movieDetailFragment, MOVIEDETAIL_TAG)
-                                        .commit();
-        }
+            MovieDetailFragment movieDetailFragment = (MovieDetailFragment) this.getSupportFragmentManager().findFragmentByTag(MOVIEDETAIL_TAG);
+
+                   movieDetailFragment = new MovieDetailFragment();
+                   Bundle args = new Bundle();
+                   args.putParcelable("movieDetailParse", movieDetailParseObject);
+                   movieDetailFragment.setArguments(args);
+                   getSupportFragmentManager().beginTransaction()
+                           .replace(R.id.detail_placeholder, movieDetailFragment, MOVIEDETAIL_TAG)
+                           .commitAllowingStateLoss();
+
+            }
     }
 
 }
