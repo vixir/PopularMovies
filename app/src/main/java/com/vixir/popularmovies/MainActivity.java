@@ -60,23 +60,27 @@ public class MainActivity extends AppCompatActivity implements ListMovieFragment
             mTwoPane = false;
         }
 
+        Bundle args = new Bundle();
+        args.putBoolean("twoPane", mTwoPane);
+        args.putParcelable("calling", getCallingActivity());
+
         if (orderByConnPref.equals("favourites")) {
+            FavouriteMovieFragment favMovieFragment = (FavouriteMovieFragment) this.getSupportFragmentManager().findFragmentByTag(FAVOURITEMOVIE_TAG);
+            if(favMovieFragment==null){
+                favMovieFragment  = new FavouriteMovieFragment();
+                favMovieFragment.setArguments(args);
+            }
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_placeholder, new FavouriteMovieFragment(),FAVOURITEMOVIE_TAG);
-            fragmentTransaction.commit();
+            fragmentTransaction.replace(R.id.fragment_placeholder, favMovieFragment,FAVOURITEMOVIE_TAG);
+            fragmentTransaction.commitAllowingStateLoss();
         } else {
-            Bundle args = new Bundle();
-            args.putBoolean("twoPane", mTwoPane);
-            args.putParcelable("calling", getCallingActivity());
             ListMovieFragment listMovieFragment = (ListMovieFragment) this.getSupportFragmentManager().findFragmentByTag(LISTMOVIE_TAG);
             if(listMovieFragment==null){
                 listMovieFragment  = new ListMovieFragment();
                 listMovieFragment.setArguments(args);
             }
-            Transition changeTransform = TransitionInflater.from(this).
-                    inflateTransition(R.transition.change_image_transform);
-            Transition explodeTransform = TransitionInflater.from(this).
-                    inflateTransition(android.R.transition.explode);
+            Transition changeTransform = TransitionInflater.from(this).inflateTransition(R.transition.change_image_transform);
+            Transition explodeTransform = TransitionInflater.from(this).inflateTransition(android.R.transition.explode);
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             listMovieFragment.setExitTransition(explodeTransform);
             listMovieFragment.setSharedElementReturnTransition(changeTransform);

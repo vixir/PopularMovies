@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import com.vixir.popularmovies.MovieDetailParse;
 import com.vixir.popularmovies.R;
 import com.vixir.popularmovies.adapters.ListMoviesGridAdapter;
 import com.vixir.popularmovies.data.MovieColumns;
@@ -46,6 +47,8 @@ public class FavouriteMovieFragment extends Fragment {
     static final int COL_POPULARITY = 7;
     static final int COL_POSTER_IMAGE = 8;
     static final int COL_BACKDROP_IMAGE = 9;
+    private int pos = 0;
+    private boolean mTwoPane = false;
 
     @Nullable
     @Override
@@ -65,33 +68,54 @@ public class FavouriteMovieFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
-        if(mMovieListData!=null){
-                    mListMoviesGridAdapter = new ListMoviesGridAdapter(getContext(), mMovieListData);
-                    gridView.setAdapter(mListMoviesGridAdapter);
-                    mListMoviesGridAdapter.notifyDataSetChanged();
+        if (mMovieListData != null) {
+            mListMoviesGridAdapter = new ListMoviesGridAdapter(getContext(), mMovieListData);
+
+            if (savedInstanceState != null) {
+                pos = savedInstanceState.getInt("position");
+                mTwoPane = savedInstanceState.getBoolean("twoPane");
+            }
+            gridView.setAdapter(mListMoviesGridAdapter);
+            mListMoviesGridAdapter.notifyDataSetChanged();
+            mListMoviesGridAdapter.setmOnItemSelected(new ListMoviesGridAdapter.OnItemSelected() {
+                @Override
+                public void onClick(MovieDetailParse movieDetailParse, int position) {
+                    if (mTwoPane == true) {
+                        pos = position;
+                    }
+                    ((ListMovieFragment.OnPosterClicked) getActivity()).onPosterSelected(movieDetailParse);
                 }
+            });
+            gridView.smoothScrollToPosition(pos);
+        }
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        pos = gridView.getFirstVisiblePosition();
+        outState.putInt("position", pos);
     }
 
     private void fetchMovieListData() {
         Cursor c = getActivity().getContentResolver().query(MovieProvider.buildUri("movies"), null, null, null, null);
         int rowCount = c.getCount();
         c.moveToFirst();
-        for(int j=0;j<rowCount;j++)
-        {
-            HashMap<String,String> map = new HashMap<String, String>();
-            map.put("title",c.getString(COL_MOVIE_TITLE));
-            map.put("poster",c.getString(COL_POSTER_IMAGE));
-            map.put("synopsis",c.getString(COL_SYNOPSIS));
-            map.put("voteCount","50");
-            map.put("popularity",c.getString(COL_POPULARITY));
-            map.put("releaseDate",c.getString(COL_RELEASE_DATE));
-            map.put("movieId",c.getString(COL_MOVIE_ID));
-            map.put("rating",c.getString(COL_AVERAGE_RATING));
-            map.put("language",c.getString(COL_LANGUAGE));
-            map.put("backdrop",c.getString(COL_BACKDROP_IMAGE));
+        for (int j = 0; j < rowCount; j++) {
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("title", c.getString(COL_MOVIE_TITLE));
+            map.put("poster", c.getString(COL_POSTER_IMAGE));
+            map.put("synopsis", c.getString(COL_SYNOPSIS));
+            map.put("voteCount", "50");
+            map.put("popularity", c.getString(COL_POPULARITY));
+            map.put("releaseDate", c.getString(COL_RELEASE_DATE));
+            map.put("movieId", c.getString(COL_MOVIE_ID));
+            map.put("rating", c.getString(COL_AVERAGE_RATING));
+            map.put("language", c.getString(COL_LANGUAGE));
+            map.put("backdrop", c.getString(COL_BACKDROP_IMAGE));
             c.moveToNext();
-        mMovieListData.add(map);
+            mMovieListData.add(map);
         }
     }
 }
